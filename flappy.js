@@ -2,11 +2,11 @@ let context = document.getElementById('game-canvas');
 const ctx = context.getContext("2d");
 let WIDTH = 300;
 let HEIGHT = 530;
-const CANVAS_WIDTH = 300;
-const CANVAS_HEIGHT = 530;
+let CANVAS_WIDTH = 300;
+let CANVAS_HEIGHT = 530;
 
-context.canvas.width = WIDTH;
-context.canvas.height = HEIGHT;
+context.width = WIDTH;
+context.height = HEIGHT;
 
 //Vars
 const FPS = 60;
@@ -20,7 +20,7 @@ let character = {
 let score = 0;
 const pipes = new Array();
 pipes[0] = {
-	x: context.canvas.width,
+	x: context.width,
 	y:0
 }
 //Audio
@@ -47,14 +47,22 @@ floor.src= './assets/imagenes/suelo.png';
 const pressButton = ()=>{
 	character.y -= 35;
 }
+const resize = ()=>{
+	CANVAS_HEIGHT = window.innerHeiht;
+	CANVAS_WIDTH = window.innerWidth;
 
+	context.width = WIDTH;
+	context.height = HEIGHT;
+
+	context.style.height= ""+ CANVAS_HEIGHT +"px";
+}
 //Game
 const loop = ()=>{
-	context.clearRect(0,0, context.canvas.width, context.canvas.height);
+	ctx.clearRect(0,0, context.width, context.height);
 	
 	//Background
 	context.drawImage(background, 0 , 0);
-	context.drawImage(floor,0, context.canvas.height - floor.height);
+	context.drawImage(floor,0, context.height - floor.height);
 	
 	//Character
 	context.drawImage(bird, character.x, character.y);
@@ -72,7 +80,7 @@ const loop = ()=>{
 		}
 	if(pipes[i].x == 150){
 	pipes.push({
-	x: context.canvas.width,
+	x: context.width,
 	y: Math.floor(Math.random()*upperPipe.height) - upperPipe.height
 	})
 	}
@@ -94,12 +102,10 @@ const loop = ()=>{
 	character.y += gravedad;
 	context.fillStyle ="rgba(20,20,20,1)";
 	context.font = "25px Arial";
-	context.fillText("Score: " + score, 10, context.canvas.height-45);
+	context.fillText("Score: " + score, 10, context.height-45);
 }
 }
 //Events
 setInterval(loop,1000/FPS);
-
-window.addEventListener("keydown", ()=>{
-	pressButton();
-})
+window.addEventListener("resize",resize());
+window.addEventListener("keydown",pressButton());
